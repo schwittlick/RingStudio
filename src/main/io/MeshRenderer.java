@@ -1,4 +1,4 @@
-package main;
+package main.io;
 
 import processing.core.PApplet;
 import toxi.geom.mesh.WETriangleMesh;

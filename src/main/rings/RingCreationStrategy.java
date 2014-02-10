@@ -1,5 +1,6 @@
-package main;
+package main.rings;
 
+import main.io.STLExporter;
 import processing.core.PApplet;
 import processing.core.PVector;
 import toxi.geom.Vec3D;
@@ -47,7 +48,7 @@ public abstract class RingCreationStrategy {
 
     }
 
-    public void connectPoints( VolumetricBrush brush, PVector start, PVector end, float thickness ) {
+    protected void connectPoints( VolumetricBrush brush, PVector start, PVector end, float thickness ) {
         for ( float i = 0.0f; i <= 1; i += 0.1 ) {
             float lerpX = PApplet.lerp( start.x, end.x, i );
             float lerpY = PApplet.lerp( start.y, end.y, i );
@@ -57,20 +58,10 @@ public abstract class RingCreationStrategy {
     }
 
     public void exportMesh( String fileName ) {
-        modifiedMesh.faceOutwards();
-        modifiedMesh.removeUnusedVertices();
-        modifiedMesh.rebuildIndex();
-        modifiedMesh.computeFaceNormals();
-        modifiedMesh.computeVertexNormals();
-
-        modifiedMesh.scale( 0.15f );
-
-        modifiedMesh.saveAsSTL( fileName );
-
-        modifiedMesh.scale( 6.6666f );
+        STLExporter.exportMesh( this.getModifiedMesh(), fileName );
     }
 
-    public void backupMesh() {
+    protected void backupMesh() {
         modifiedMesh = originalMesh;
     }
 

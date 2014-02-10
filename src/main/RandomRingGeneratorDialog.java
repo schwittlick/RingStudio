@@ -1,6 +1,8 @@
 package main;
 
-import processing.core.PApplet;
+import main.gui.TaskBarElement;
+import main.misc.MeshUtils;
+import main.rings.HemRingCreator;
 import toxi.geom.Vec3D;
 
 import javax.swing.*;
@@ -10,7 +12,7 @@ import java.awt.event.*;
 
 public class RandomRingGeneratorDialog extends JDialog {
 
-    private RandomCircleRing drawer;
+    private HemRingCreator drawer;
 
     private JPanel contentPane;
     private JButton buttonOK;
@@ -35,8 +37,9 @@ public class RandomRingGeneratorDialog extends JDialog {
     private JCheckBox normalsCheckBox;
     private JButton subdivideButton;
 
+    public RandomRingGeneratorDialog( final HemRingCreator drawer ) {
 
-    public RandomRingGeneratorDialog( final RandomCircleRing drawer ) {
+        super( new TaskBarElement( "Name on task bar" ) );
 
         this.drawer = drawer;
 
@@ -83,7 +86,7 @@ public class RandomRingGeneratorDialog extends JDialog {
         smoothButton.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed( ActionEvent e ) {
-                Util.smoothMesh( drawer.getModifiedMesh(), 1 );
+                MeshUtils.smoothMesh( drawer.getModifiedMesh(), 1 );
             }
         } );
 
@@ -197,6 +200,13 @@ public class RandomRingGeneratorDialog extends JDialog {
     private void onCancel() {
 // add your code here if necessary
         dispose();
+    }
+
+    public void setVisible( boolean visible ) {
+        super.setVisible( visible );
+        if ( !visible ) {
+            ( ( TaskBarElement ) getParent() ).dispose();
+        }
     }
 
     private void createUIComponents() {

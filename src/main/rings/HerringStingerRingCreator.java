@@ -1,9 +1,8 @@
-package main;
+package main.rings;
 
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PVector;
-import toxi.geom.Vec3D;
 
 /**
  * Author: mrzl
@@ -11,8 +10,8 @@ import toxi.geom.Vec3D;
  * Time: 21:27
  * Project: MeshBrushDrawer
  */
-public class ThreeLinesRing extends RingCreationStrategy {
-    public ThreeLinesRing( PApplet p ) {
+public class HerringStingerRingCreator extends RingCreationStrategy {
+    public HerringStingerRingCreator( PApplet p ) {
         super( p );
 
         init();
@@ -23,10 +22,22 @@ public class ThreeLinesRing extends RingCreationStrategy {
         init();
         for ( int i = 0; i < nrOfRings; i++ ) {
             drawMeshCircle( radius, 200, 0.2f, i * distanceInbetween );
-            //getOriginalMesh().translate( new Vec3D( 0, 0, distanceInbetween ) );
         }
 
+        drawConnection( radius, 0.2f, nrOfRings * distanceInbetween );
+
         recomputeMesh();
+    }
+
+    private void drawConnection( float radius, float thickness, int length ) {
+        length *= 0.8f;
+        int steps = 20;
+        for ( int i = 0; i < steps; i++ ) {
+            float lerpedZ = PApplet.lerp( 0, length - 1, i / ( float ) steps  );
+            connectPoints( brush,
+                    new PVector( radius * PApplet.sin( PConstants.TWO_PI / 2.7f ), radius * PApplet.cos( PConstants.TWO_PI / 2.7f ), -lerpedZ ),
+                    new PVector( radius * PApplet.sin( PConstants.TWO_PI / 2.7f ), radius * PApplet.cos( PConstants.TWO_PI / 2.7f ), -lerpedZ + length / steps ), thickness );
+        }
     }
 
     private void drawMeshCircle( float radius, float numPoints, float thickness, int zOffSet ) {
@@ -37,5 +48,4 @@ public class ThreeLinesRing extends RingCreationStrategy {
             connectPoints( brush, start, end, thickness );
         }
     }
-
 }

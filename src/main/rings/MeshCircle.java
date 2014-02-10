@@ -1,4 +1,4 @@
-package main;
+package main.rings;
 
 import processing.core.PApplet;
 import processing.core.PConstants;
@@ -19,7 +19,6 @@ public class MeshCircle extends RingCreationStrategy {
     public MeshCircle( PApplet p ) {
         super( p );
     }
-
 
     public void drawMeshCircle( VolumetricSpace volume, IsoSurface surface, VolumetricBrush brush, float radius, float numPoints, WETriangleMesh mesh, float thickness ) {
         float angle = PConstants.TWO_PI / numPoints;

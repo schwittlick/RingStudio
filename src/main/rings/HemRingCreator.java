@@ -1,10 +1,11 @@
-package main;
+package main.rings;
 
+import main.misc.MeshUtils;
+import main.io.MeshRenderer;
+import main.RandomRingGeneratorDialog;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PVector;
-import toxi.geom.mesh.LaplacianSmooth;
-import toxi.geom.mesh.WETriangleMesh;
 import toxi.geom.mesh.subdiv.MidpointSubdivision;
 
 /**
@@ -13,14 +14,14 @@ import toxi.geom.mesh.subdiv.MidpointSubdivision;
  * Time: 16:11
  * Project: MeshBrushDrawer
  */
-public class RandomCircleRing extends RingCreationStrategy {
+public class HemRingCreator extends RingCreationStrategy {
     private int growRingVariance;
     private int growRingHeight;
     private int growRingRadius;
 
     private RandomRingGeneratorDialog dialog;
 
-    public RandomCircleRing( PApplet p ) {
+    public HemRingCreator( PApplet p ) {
         super( p );
 
         this.growRingVariance = 4;
@@ -32,8 +33,6 @@ public class RandomCircleRing extends RingCreationStrategy {
         this.dialog.pack();
         this.dialog.setVisible( true );
     }
-
-
 
     public void generateMesh( float numPoints, float thickness ) {
         init();
@@ -50,7 +49,7 @@ public class RandomCircleRing extends RingCreationStrategy {
 
         recomputeMesh();
 
-        Util.smoothMesh( getModifiedMesh(), 10 );
+        MeshUtils.smoothMesh( getModifiedMesh(), 10 );
     }
 
 
@@ -67,7 +66,7 @@ public class RandomCircleRing extends RingCreationStrategy {
     }
 
     public void exportSTL() {
-        String fileName = "ring-" + Util.getTimeStamp() + ".stl";
+        String fileName = "ring-" + MeshUtils.getTimeStamp() + ".stl";
 
         exportMesh( fileName );
     }

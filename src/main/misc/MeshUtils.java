@@ -1,13 +1,17 @@
-package main;
+package main.misc;
 
-import processing.core.PApplet;
-import processing.core.PConstants;
-import processing.core.PVector;
 import toxi.geom.Vec3D;
 import toxi.geom.mesh.LaplacianSmooth;
+import toxi.geom.mesh.Vertex;
 import toxi.geom.mesh.WETriangleMesh;
-import toxi.volume.*;
+import toxi.physics.VerletParticle;
+import toxi.physics.constraints.SphereConstraint;
+import toxi.volume.HashIsoSurface;
+import toxi.volume.IsoSurface;
+import toxi.volume.MeshVoxelizer;
+import toxi.volume.VolumetricSpace;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
@@ -16,7 +20,7 @@ import java.util.Calendar;
  * Time: 21:44
  * Project: MeshBrushDrawer
  */
-public class Util {
+public class MeshUtils {
 
 
     public static WETriangleMesh meshVoxelizer( WETriangleMesh mesh, int meshVoxRes,
@@ -42,5 +46,26 @@ public class Util {
 
     public static void smoothMesh( WETriangleMesh mesh, int amount ) {
         new LaplacianSmooth().filter( mesh, amount );
+    }
+
+    public static void addSphereConstraintToCenter( WETriangleMesh mesh, int radius ) {
+        System.out.println( "Applying Sphere Constraint." );
+        ArrayList<SphereConstraint> sphereConstraints = new ArrayList<SphereConstraint>();
+        for( int i = 0; i < 100; i++ ) {
+            sphereConstraints.add( new SphereConstraint( new Vec3D( 0, 0, -i * 5 ), radius, false ) );
+        }
+
+        for ( Vertex v : mesh.getVertices() ) {
+
+            VerletParticle p = new VerletParticle( v.x(), v.y(), v.z() );
+            for( SphereConstraint c : sphereConstraints ) {
+                p.addConstraint( c );
+            }
+
+            p.applyConstraints();
+            v.setComponent( Vec3D.Axis.X, p.x() );
+            v.setComponent( Vec3D.Axis.Y, p.y() );
+            v.setComponent( Vec3D.Axis.Z, p.z() );
+        }
     }
 }

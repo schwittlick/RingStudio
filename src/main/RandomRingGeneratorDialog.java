@@ -8,9 +8,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.event.*;
 
-public class VolumeDrawerGUI extends JDialog {
+public class RandomRingGeneratorDialog extends JDialog {
 
-    private VolumeDrawer drawer;
+    private RandomCircleRing drawer;
 
     private JPanel contentPane;
     private JButton buttonOK;
@@ -21,16 +21,71 @@ public class VolumeDrawerGUI extends JDialog {
     private JSpinner xSpinner;
     private JSpinner ySpinner;
     private JSpinner zSpinner;
+    private JSlider growRingVarianceSlider;
+    private JSlider growRingHeightSlider;
+    private JSpinner growRingVarianceSpinner;
+    private JSpinner growRingHeightSpinner;
+    private JCheckBox randomSeedCheckBox;
+    private JButton exportSTLButton;
+    private JButton generateButton;
+    private JSlider growRingRadiusSlider;
+    private JSpinner growRingRadiusSpinner;
+    private JButton smoothButton;
+    private JCheckBox wireframeCheckBox;
+    private JCheckBox normalsCheckBox;
+    private JButton subdivideButton;
 
 
-    public VolumeDrawerGUI(  PApplet drawer ) {
+    public RandomRingGeneratorDialog( final RandomCircleRing drawer ) {
 
-        this.drawer = ( VolumeDrawer ) drawer;
+        this.drawer = drawer;
 
+        xSpinner.setValue( 10 );
+        ySpinner.setValue( 10 );
+        zSpinner.setValue( 10 );
+        growRingVarianceSpinner.setValue( 4 );
+        growRingHeightSpinner.setValue( 800 );
+        growRingRadiusSpinner.setValue( 100 );
 
         setContentPane( contentPane );
         setModal( false );
         getRootPane().setDefaultButton( buttonOK );
+
+        normalsCheckBox.addActionListener( new ActionListener() {
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                drawer.toggleNormals();
+            }
+        } );
+
+        wireframeCheckBox.addActionListener( new ActionListener() {
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                drawer.toggleWireFrame();
+            }
+        } );
+
+        exportSTLButton.addActionListener( new ActionListener() {
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                drawer.exportSTL();
+            }
+        } );
+
+        generateButton.addActionListener( new ActionListener() {
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                drawer.generateMesh( 100, 0.2f );
+            }
+        } );
+
+
+        smoothButton.addActionListener( new ActionListener() {
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                Util.smoothMesh( drawer.getModifiedMesh(), 1 );
+            }
+        } );
 
         connectSlidersWithSpinBoxes();
 
@@ -102,7 +157,37 @@ public class VolumeDrawerGUI extends JDialog {
                 drawer.scale( drawer.getOriginalMesh(), Vec3D.Axis.Z, xScale, yScale, zScale );
             }
         } );
+
+        growRingHeightSlider.addChangeListener( new ChangeListener() {
+            public void stateChanged( ChangeEvent e ) {
+                JSlider source = ( JSlider ) e.getSource();
+                int value = source.getValue();
+                growRingHeightSpinner.setValue( value );
+                drawer.setGrowRingHeight( value );
+            }
+        } );
+
+        growRingVarianceSlider.addChangeListener( new ChangeListener() {
+            @Override
+            public void stateChanged( ChangeEvent e ) {
+                JSlider source = ( JSlider ) e.getSource();
+                int value = source.getValue();
+                growRingVarianceSpinner.setValue( value );
+                drawer.setGrowRingVariance( value );
+            }
+        } );
+
+        growRingRadiusSlider.addChangeListener( new ChangeListener() {
+            @Override
+            public void stateChanged( ChangeEvent e ) {
+                JSlider source = ( JSlider ) e.getSource();
+                int value = source.getValue();
+                growRingRadiusSpinner.setValue( value );
+                drawer.setGrowRingRadius( value );
+            }
+        } );
     }
+
 
     private void onOK() {
 // add your code here
@@ -116,9 +201,6 @@ public class VolumeDrawerGUI extends JDialog {
 
     private void createUIComponents() {
 
-        xSpinner.setValue( 10 );
-        ySpinner.setValue( 10 );
-        zSpinner.setValue( 10 );
 
     }
 

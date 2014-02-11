@@ -1,11 +1,32 @@
+/*
+ * RingStudio
+ *
+ * Copyright (C) 2014 Marcel Schwittlick
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * {@link http://www.gnu.org/licenses/lgpl.html}
+ *
+ */
+
 package main;
 
-import main.RingCreationChooserDialog;
 import main.io.MeshRenderer;
 import main.misc.MeshUtils;
 import main.rings.HemRingCreator;
 import main.rings.HerringStingerRingCreator;
-import main.rings.RingCreationStrategy;
+import main.rings.RingCreator;
 import peasy.PeasyCam;
 import processing.core.PApplet;
 import toxi.geom.mesh.LaplacianSmooth;
@@ -20,10 +41,10 @@ import java.util.EventListener;
  */
 public class MainRingFactory extends PApplet implements EventListener {
 
+    private RingCreator rcs;
     private MeshRenderer meshRenderer;
     private PeasyCam cam;
 
-    RingCreationStrategy rcs;
 
     public void init() {
         RingCreationChooserDialog dialog = new RingCreationChooserDialog( this );

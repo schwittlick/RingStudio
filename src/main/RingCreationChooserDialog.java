@@ -1,5 +1,6 @@
 package main;
 
+import main.MainRingFactory;
 import main.gui.TaskBarElement;
 
 import javax.swing.*;
